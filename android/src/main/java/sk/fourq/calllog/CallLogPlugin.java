@@ -153,7 +153,7 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
         }
     }
 
-    /**
+    /***
      * Handler for flutter {@link MethodCall}
      */
     private void handleMethodCall() {
@@ -244,15 +244,18 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
      * @return Name of the used sim card, null otherwise
      */
     private String getSimDisplayName(List<SubscriptionInfo> subscriptions, String accountId) {
+        int simSlotIndex = -1;
         if (accountId != null && subscriptions != null) {
             for (SubscriptionInfo info : subscriptions) {
-                if (Integer.toString(info.getSubscriptionId()).equals(accountId) ||
-                        accountId.contains(info.getIccId())) {
-                    return String.valueOf(info.getDisplayName());
+                if (Integer.toString(info.getSubscriptionId()).equals(accountId)) {
+                    simSlotIndex = info.getSimSlotIndex();
+                    break;
+//                    return String.valueOf(simSlotIndex);
+//                    return String.valueOf(info.getDisplayName());
                 }
             }
         }
-        return null;
+        return String.valueOf(simSlotIndex);
     }
 
     /**
