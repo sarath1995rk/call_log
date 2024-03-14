@@ -9,6 +9,9 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
 import android.provider.CallLog;
+import android.telecom.PhoneAccount;
+import android.telecom.PhoneAccountHandle;
+import android.telecom.TelecomManager;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.util.Log;
@@ -219,7 +222,6 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
         )) {
             List<HashMap<String, Object>> entries = new ArrayList<>();
             while (cursor != null && cursor.moveToNext()) {
-                Log.d(TAG, "cursor data " + cursor);
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("formattedNumber", cursor.getString(0));
                 map.put("number", cursor.getString(1));
@@ -230,7 +232,8 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
                 map.put("cachedNumberType", cursor.getInt(6));
                 map.put("cachedNumberLabel", cursor.getString(7));
                 map.put("cachedMatchedNumber", cursor.getString(8));
-                map.put("simDisplayName", getSimDisplayName(subscriptions,cursor.getString(9)));
+                map.put("simDisplayName", getSimSlotIndexFromAccountId(ctx,cursor.getString(9)));
+//                map.put("simDisplayName", getSimDisplayName(subscriptions,cursor.getString(9)));
 //                map.put("simDisplayName", getSimDisplayName(subscriptions, cursor.getString(cursor.getColumnIndex(CallLog.Calls.PHONE_ACCOUNT_ID))));
                 map.put("phoneAccountId", cursor.getString(9));
                 entries.add(map);
@@ -265,7 +268,28 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
                 }
             }
         }
+
         return String.valueOf(simSlotIndex);
+    }
+
+
+    public static String getSimSlotIndexFromAccountId(Context context, String accountIdToFind) {
+        Log.d(TAG, "Called inside getSlimSlot Id" + accountIdToFind);
+        TelecomManager telecomManager = (TelecomManager) context.getSystemService(Context.TELECOM_SERVICE);
+        for (int index = 0; index < telecomManager.getCallCapablePhoneAccounts().size(); index++) {
+            PhoneAccountHandle account = telecomManager.getCallCapablePhoneAccounts().get(index);
+            PhoneAccount phoneAccount = telecomManager.getPhoneAccount(account);
+            String accountId = phoneAccount.getAccountHandle().getId();
+            Log.d(TAG, "Called inside getSlimSlot Id 1.0" + accountIdToFind);
+            if (accountIdToFind.equals(accountId)) {
+                return String.valueOf(index);
+            }
+        }
+        Integer parsedAccountId = Integer.parseInt(accountIdToFind);
+        if (parsedAccountId != null && parsedAccountId >= 0) {
+            return String.valueOf(parsedAccountId);
+        }
+        return "-1";
     }
 
     /**
