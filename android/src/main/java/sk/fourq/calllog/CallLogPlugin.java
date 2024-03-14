@@ -217,7 +217,6 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
                 null,
                 CallLog.Calls.DATE + " DESC"
         )) {
-            Log.d(TAG, "account Id  1" + cursor.getString(9));
             List<HashMap<String, Object>> entries = new ArrayList<>();
             while (cursor != null && cursor.moveToNext()) {
                 HashMap<String, Object> map = new HashMap<>();
@@ -230,7 +229,8 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
                 map.put("cachedNumberType", cursor.getInt(6));
                 map.put("cachedNumberLabel", cursor.getString(7));
                 map.put("cachedMatchedNumber", cursor.getString(8));
-                map.put("simDisplayName", getSimDisplayName(subscriptions, cursor.getString(cursor.getColumnIndex(CallLog.Calls.PHONE_ACCOUNT_ID))));
+                map.put("simDisplayName", getSimDisplayName(subscriptions,cursor.getString(9)));
+//                map.put("simDisplayName", getSimDisplayName(subscriptions, cursor.getString(cursor.getColumnIndex(CallLog.Calls.PHONE_ACCOUNT_ID))));
                 map.put("phoneAccountId", cursor.getString(9));
                 entries.add(map);
             }
