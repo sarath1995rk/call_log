@@ -249,12 +249,12 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
      * @return Name of the used sim card, null otherwise
      */
     private String getSimDisplayName(List<SubscriptionInfo> subscriptions, String accountId) {
-        Log.d(TAG, "Test ************" + accountId);
+
         int simSlotIndex = -3;
         if (accountId != null && subscriptions != null) {
-            Log.d(TAG, "Test ++++++++++++++++" + accountId);
             for (SubscriptionInfo info : subscriptions) {
-                Log.d(TAG, "subscription info" + info.getCarrierName().toString());
+                Log.d(TAG, "account Id" + accountId);
+                Log.d(TAG, "subscription info" + info.toString());
                 if (Integer.toString(info.getSubscriptionId()).equals(accountId)) {
                     simSlotIndex = info.getSimSlotIndex();
                     break;
