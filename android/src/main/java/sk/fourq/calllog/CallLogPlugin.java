@@ -274,13 +274,11 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
 
 
     public static String getSimSlotIndexFromAccountId(Context context, String accountIdToFind) {
-        Log.d(TAG, "Called inside getSlimSlot Id" + accountIdToFind);
         TelecomManager telecomManager = (TelecomManager) context.getSystemService(Context.TELECOM_SERVICE);
         for (int index = 0; index < telecomManager.getCallCapablePhoneAccounts().size(); index++) {
             PhoneAccountHandle account = telecomManager.getCallCapablePhoneAccounts().get(index);
             PhoneAccount phoneAccount = telecomManager.getPhoneAccount(account);
             String accountId = phoneAccount.getAccountHandle().getId();
-            Log.d(TAG, "Called inside getSlimSlot Id 1.0" + accountIdToFind);
             if (accountIdToFind.equals(accountId)) {
                 return String.valueOf(index);
             }
