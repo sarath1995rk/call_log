@@ -1,6 +1,7 @@
 package sk.fourq.calllog;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -11,9 +12,11 @@ import android.provider.CallLog;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -23,6 +26,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -199,6 +203,7 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
      *
      * @param query String with sql search condition
      */
+    @SuppressLint("Range")
     private void queryLogs(String query) {
         SubscriptionManager subscriptionManager = ContextCompat.getSystemService(ctx, SubscriptionManager.class);
         List<SubscriptionInfo> subscriptions = null;
@@ -224,7 +229,7 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
                 map.put("cachedNumberType", cursor.getInt(6));
                 map.put("cachedNumberLabel", cursor.getString(7));
                 map.put("cachedMatchedNumber", cursor.getString(8));
-                map.put("simDisplayName", getSimDisplayName(subscriptions, cursor.getString(9)));
+                map.put("simDisplayName", getSimDisplayName(subscriptions, cursor.getString(cursor.getColumnIndex(CallLog.Calls.PHONE_ACCOUNT_ID))));
                 map.put("phoneAccountId", cursor.getString(9));
                 entries.add(map);
             }
@@ -247,7 +252,7 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
         int simSlotIndex = -1;
         if (accountId != null && subscriptions != null) {
             for (SubscriptionInfo info : subscriptions) {
-                Log.d(TAG,"subscription info" + info.getCarrierName().toString());
+                Log.d(TAG, "subscription info" + info.getCarrierName().toString());
                 if (Integer.toString(info.getSubscriptionId()).equals(accountId)) {
                     simSlotIndex = info.getSimSlotIndex();
                     break;
