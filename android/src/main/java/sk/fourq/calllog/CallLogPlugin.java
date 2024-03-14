@@ -219,6 +219,7 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
         )) {
             List<HashMap<String, Object>> entries = new ArrayList<>();
             while (cursor != null && cursor.moveToNext()) {
+                Log.d(TAG, "cursor data " + cursor);
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("formattedNumber", cursor.getString(0));
                 map.put("number", cursor.getString(1));
@@ -251,7 +252,7 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
      */
     private String getSimDisplayName(List<SubscriptionInfo> subscriptions, String accountId) {
 
-        int simSlotIndex = -3;
+        int simSlotIndex = -4;
         if (accountId != null && subscriptions != null) {
             for (SubscriptionInfo info : subscriptions) {
                 Log.d(TAG, "account Id" + accountId);
