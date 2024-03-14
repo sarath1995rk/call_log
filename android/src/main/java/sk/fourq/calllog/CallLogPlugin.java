@@ -251,7 +251,7 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
      */
     private String getSimDisplayName(List<SubscriptionInfo> subscriptions, String accountId) {
         Log.d(TAG, "Test ************" + accountId);
-        int simSlotIndex = -2;
+        int simSlotIndex = -3;
         if (accountId != null && subscriptions != null) {
             Log.d(TAG, "Test ++++++++++++++++" + accountId);
             for (SubscriptionInfo info : subscriptions) {
