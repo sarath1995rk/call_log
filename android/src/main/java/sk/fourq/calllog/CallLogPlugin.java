@@ -217,6 +217,7 @@ public class CallLogPlugin implements FlutterPlugin, ActivityAware, MethodCallHa
                 null,
                 CallLog.Calls.DATE + " DESC"
         )) {
+            Log.d(TAG, "account Id  1" + cursor.getString(9));
             List<HashMap<String, Object>> entries = new ArrayList<>();
             while (cursor != null && cursor.moveToNext()) {
                 HashMap<String, Object> map = new HashMap<>();
